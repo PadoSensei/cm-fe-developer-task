@@ -4,10 +4,12 @@ import { makeStyles } from "@material-ui/core/styles";
 // core components
 import GridItem from "components/Grid/GridItem.js";
 import GridContainer from "components/Grid/GridContainer.js";
-import Table from "components/Table/Table.js";
+import TableWithRadio from "components/Table/TableWithRadio";
+import Table from "components/Table/Table";
 import Card from "components/Card/Card.js";
 import CardHeader from "components/Card/CardHeader.js";
 import CardBody from "components/Card/CardBody.js";
+import data from "assets/data/HR.json";
 
 const styles = {
   cardCategoryWhite: {
@@ -43,6 +45,14 @@ const useStyles = makeStyles(styles);
 
 export default function TableList() {
   const classes = useStyles();
+  function prepDataForTable(data) {
+    let answer = data.map((el) => Object.values(el));
+    answer.map((el) => el.push(`${el[3].name.first} ${el[3].name.last}`));
+    answer.map((el) => el.splice(3, 1));
+    answer.map((el) => el.splice(0, 1));
+    return answer;
+  }
+  const result = prepDataForTable(data.departments);
   return (
     <GridContainer>
       <GridItem xs={12} sm={12} md={12}>
@@ -54,17 +64,10 @@ export default function TableList() {
             </p>
           </CardHeader>
           <CardBody>
-            <Table
+            <TableWithRadio
               tableHeaderColor="primary"
-              tableHead={["Name", "Country", "City", "Salary"]}
-              tableData={[
-                ["Dakota Rice", "Niger", "Oud-Turnhout", "$36,738"],
-                ["Minerva Hooper", "Curaçao", "Sinaai-Waas", "$23,789"],
-                ["Sage Rodriguez", "Netherlands", "Baileux", "$56,142"],
-                ["Philip Chaney", "Korea, South", "Overland Park", "$38,735"],
-                ["Doris Greene", "Malawi", "Feldkirchen in Kärnten", "$63,542"],
-                ["Mason Porter", "Chile", "Gloucester", "$78,615"],
-              ]}
+              tableHead={["Department", "City", "Managed By"]}
+              tableData={[...result]}
             />
           </CardBody>
         </Card>
