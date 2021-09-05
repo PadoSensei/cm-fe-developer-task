@@ -45,29 +45,69 @@ const useStyles = makeStyles(styles);
 
 export default function TableList() {
   const classes = useStyles();
-  function prepDataForTable(data) {
-    let answer = data.map((el) => Object.values(el));
-    answer.map((el) => el.push(`${el[3].name.first} ${el[3].name.last}`));
-    answer.map((el) => el.splice(3, 1));
-    answer.map((el) => el.splice(0, 1));
-    return answer;
+  const [apiTarget, setAPiTarget] = React.useState("");
+  const [employeeData, setEmployeeData] = React.useState("Loading");
+  const [isLoading, setIsLoading] = React.useState(true);
+  React.useEffect(() => {
+    fetchEmployeeData(apiTarget);
+  }, [apiTarget]);
+  async function fetchEmployeeData(deptName) {
+    let cleanedDataArray = [];
+    const response = await fetch(
+      `https://randomuser.me/api/?seed=${deptName}&results=10`
+    );
+    const data = await response.json();
+    const dataToClean = data.results;
+    dataToClean.map((el) => cleanedDataArray.push(cleanDataForTable(el)));
+    setEmployeeData(cleanedDataArray);
+    setIsLoading(false);
   }
-  const result = prepDataForTable(data.departments);
+  function handleRadioButton(event) {
+    const radioButtonTarget = event.target.value;
+    const targetDept = getDept(radioButtonTarget);
+    setAPiTarget(targetDept);
+  }
+  function getDept(str) {
+    let target = str.indexOf(",");
+    return str.slice(0, target);
+  }
+  function prepDataForDeptTable(data) {
+    let result = data.map((el) => Object.values(el));
+    result.map((el) => el.push(`${el[3].name.first} ${el[3].name.last}`));
+    result.map((el) => el.splice(3, 1));
+    result.map((el) => el.splice(0, 1));
+    return result;
+  }
+  function cleanDataForTable(item) {
+    let employeeData = [];
+    const fullName = `${item.name.first} ${item.name.last}`;
+    const age = item.dob.age;
+    const timeWithCompany = item.registered.age;
+    const email = item.email;
+    const location = `${item.location.city}, ${item.location.country}`;
+    const phone = item.cell;
+    employeeData.push(fullName, location, age, timeWithCompany, email, phone);
+    return employeeData;
+  }
+  const deptTable = prepDataForDeptTable(data.departments);
+  let loadingMessage = ["Data is loading"];
+  console.log(employeeData);
   return (
     <GridContainer>
       <GridItem xs={12} sm={12} md={12}>
         <Card>
           <CardHeader color="primary">
-            <h4 className={classes.cardTitleWhite}>Simple Table</h4>
+            <h4 className={classes.cardTitleWhite}>Departments</h4>
             <p className={classes.cardCategoryWhite}>
-              Here is a subtitle for this table
+              Table of Departments and Managers
             </p>
           </CardHeader>
           <CardBody>
             <TableWithRadio
               tableHeaderColor="primary"
               tableHead={["Department", "City", "Managed By"]}
-              tableData={[...result]}
+              tableData={[...deptTable]}
+              handleRadioButton={handleRadioButton}
             />
           </CardBody>
         </Card>
@@ -85,27 +125,15 @@ export default function TableList() {
           <CardBody>
             <Table
               tableHeaderColor="primary"
-              tableHead={["ID", "Name", "Country", "City", "Salary"]}
-              tableData={[
-                ["1", "Dakota Rice", "$36,738", "Niger", "Oud-Turnhout"],
-                ["2", "Minerva Hooper", "$23,789", "Curaçao", "Sinaai-Waas"],
-                ["3", "Sage Rodriguez", "$56,142", "Netherlands", "Baileux"],
-                [
-                  "4",
-                  "Philip Chaney",
-                  "$38,735",
-                  "Korea, South",
-                  "Overland Park",
-                ],
-                [
-                  "5",
-                  "Doris Greene",
-                  "$63,542",
-                  "Malawi",
-                  "Feldkirchen in Kärnten",
-                ],
-                ["6", "Mason Porter", "$78,615", "Chile", "Gloucester"],
+              tableHead={[
+                "Name",
+                "Location",
+                "Age",
+                "Years with company",
+                "Email",
+                "Mobile Number",
               ]}
+              tableData={isLoading ? [[...loadingMessage]] : [...employeeData]}
             />
           </CardBody>
         </Card>
