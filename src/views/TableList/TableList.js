@@ -45,7 +45,7 @@ const useStyles = makeStyles(styles);
 
 export default function TableList() {
   const classes = useStyles();
-  const [apiTarget, setAPiTarget] = React.useState("hr");
+  const [apiTarget, setApiTarget] = React.useState("hr");
   const [employeeData, setEmployeeData] = React.useState("Loading");
   const [isLoading, setIsLoading] = React.useState(true);
   React.useEffect(() => {
@@ -65,7 +65,7 @@ export default function TableList() {
   function handleRadioButton(event) {
     const radioButtonTarget = event.target.value;
     const targetDept = getDept(radioButtonTarget);
-    setAPiTarget(targetDept);
+    setApiTarget(targetDept);
   }
   function getDept(str) {
     let target = str.indexOf(",");
@@ -76,7 +76,6 @@ export default function TableList() {
     result.map((el) => el.push(`${el[3].name.first} ${el[3].name.last}`));
     result.map((el) => el.splice(3, 1));
     result.map((el) => el.splice(0, 1));
-    console.log(result);
     return result;
   }
   function cleanDataForTable(item) {
@@ -89,13 +88,6 @@ export default function TableList() {
     const phone = item.cell;
     employeeData.push(fullName, location, age, timeWithCompany, email, phone);
     return employeeData;
-  }
-  function capitalizeDept(str) {
-    if (str.length <= 2) {
-      return str.toUpperCase();
-    }
-    const capitalized = str[0].toUpperCase() + str.slice(1);
-    return capitalized;
   }
   const deptTable = prepDataForDeptTable(data.departments);
   let loadingMessage = ["Data is loading"];
@@ -125,7 +117,7 @@ export default function TableList() {
           <CardHeader plain color="primary">
             <h4 className={classes.cardTitleWhite}>Employees By Department</h4>
             <p className={classes.cardCategoryWhite}>
-              The {capitalizeDept(apiTarget)} Department
+              The {apiTarget} Department
             </p>
           </CardHeader>
           <CardBody>
