@@ -45,7 +45,7 @@ const useStyles = makeStyles(styles);
 
 export default function TableList() {
   const classes = useStyles();
-  const [apiTarget, setAPiTarget] = React.useState("");
+  const [apiTarget, setAPiTarget] = React.useState("hr");
   const [employeeData, setEmployeeData] = React.useState("Loading");
   const [isLoading, setIsLoading] = React.useState(true);
   React.useEffect(() => {
@@ -91,7 +91,6 @@ export default function TableList() {
   }
   const deptTable = prepDataForDeptTable(data.departments);
   let loadingMessage = ["Data is loading"];
-  console.log(employeeData);
   return (
     <GridContainer>
       <GridItem xs={12} sm={12} md={12}>
@@ -108,6 +107,7 @@ export default function TableList() {
               tableHead={["Department", "City", "Managed By"]}
               tableData={[...deptTable]}
               handleRadioButton={handleRadioButton}
+              apiTarget={apiTarget}
             />
           </CardBody>
         </Card>
@@ -115,11 +115,9 @@ export default function TableList() {
       <GridItem xs={12} sm={12} md={12}>
         <Card plain>
           <CardHeader plain color="primary">
-            <h4 className={classes.cardTitleWhite}>
-              Table on Plain Background
-            </h4>
+            <h4 className={classes.cardTitleWhite}>Employees By Department</h4>
             <p className={classes.cardCategoryWhite}>
-              Here is a subtitle for this table
+              The {apiTarget} Department
             </p>
           </CardHeader>
           <CardBody>

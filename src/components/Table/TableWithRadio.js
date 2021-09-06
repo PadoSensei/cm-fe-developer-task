@@ -15,7 +15,13 @@ const useStyles = makeStyles(styles);
 
 export default function CustomTable(props) {
   const classes = useStyles();
-  const { tableHead, tableData, tableHeaderColor, handleRadioButton } = props;
+  const {
+    tableHead,
+    tableData,
+    tableHeaderColor,
+    handleRadioButton,
+    apiTarget,
+  } = props;
   return (
     <div className={classes.tableResponsive}>
       <Table className={classes.table}>
@@ -46,7 +52,11 @@ export default function CustomTable(props) {
                     </TableCell>
                   );
                 })}
-                <Radio value={prop} onClick={handleRadioButton} />
+                <Radio
+                  value={prop}
+                  onClick={handleRadioButton}
+                  checked={apiTarget === prop[0] ? true : false}
+                />
               </TableRow>
             );
           })}
@@ -73,4 +83,5 @@ CustomTable.propTypes = {
   tableHead: PropTypes.arrayOf(PropTypes.string),
   tableData: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.string)),
   handleRadioButton: PropTypes.func,
+  apiTarget: PropTypes.string,
 };
