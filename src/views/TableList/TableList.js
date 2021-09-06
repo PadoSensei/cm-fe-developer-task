@@ -76,6 +76,7 @@ export default function TableList() {
     result.map((el) => el.push(`${el[3].name.first} ${el[3].name.last}`));
     result.map((el) => el.splice(3, 1));
     result.map((el) => el.splice(0, 1));
+    console.log(result);
     return result;
   }
   function cleanDataForTable(item) {
@@ -88,6 +89,13 @@ export default function TableList() {
     const phone = item.cell;
     employeeData.push(fullName, location, age, timeWithCompany, email, phone);
     return employeeData;
+  }
+  function capitalizeDept(str) {
+    if (str.length <= 2) {
+      return str.toUpperCase();
+    }
+    const capitalized = str[0].toUpperCase() + str.slice(1);
+    return capitalized;
   }
   const deptTable = prepDataForDeptTable(data.departments);
   let loadingMessage = ["Data is loading"];
@@ -117,7 +125,7 @@ export default function TableList() {
           <CardHeader plain color="primary">
             <h4 className={classes.cardTitleWhite}>Employees By Department</h4>
             <p className={classes.cardCategoryWhite}>
-              The {apiTarget} Department
+              The {capitalizeDept(apiTarget)} Department
             </p>
           </CardHeader>
           <CardBody>
