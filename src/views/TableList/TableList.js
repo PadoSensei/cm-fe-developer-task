@@ -45,11 +45,16 @@ const useStyles = makeStyles(styles);
 
 export default function TableList() {
   const classes = useStyles();
-  const [apiTarget, setApiTarget] = React.useState("hr");
+  const [apiTarget, setApiTarget] = React.useState(
+    localStorage.getItem("dept") || "hr"
+  );
   const [employeeData, setEmployeeData] = React.useState("Loading");
   const [isLoading, setIsLoading] = React.useState(true);
   React.useEffect(() => {
     fetchEmployeeData(apiTarget);
+  }, [apiTarget]);
+  React.useEffect(() => {
+    localStorage.setItem("dept", apiTarget);
   }, [apiTarget]);
   async function fetchEmployeeData(deptName) {
     let cleanedDataArray = [];
@@ -66,6 +71,12 @@ export default function TableList() {
     const radioButtonTarget = event.target.value;
     const targetDept = getDept(radioButtonTarget);
     setApiTarget(targetDept);
+  }
+  function capitalizeDept(str) {
+    if (str.length <= 2) {
+      return str.toUpperCase();
+    }
+    return str.charAt(0).toUpperCase() + str.slice(1);
   }
   function getDept(str) {
     let target = str.indexOf(",");
@@ -117,7 +128,7 @@ export default function TableList() {
           <CardHeader plain color="primary">
             <h4 className={classes.cardTitleWhite}>Employees By Department</h4>
             <p className={classes.cardCategoryWhite}>
-              The {apiTarget} Department
+              The {capitalizeDept(apiTarget)} Department
             </p>
           </CardHeader>
           <CardBody>
